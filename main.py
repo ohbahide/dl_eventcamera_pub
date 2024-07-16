@@ -116,6 +116,7 @@ def main(args: DictConfig):
     #   optimizer
     # ------------------
     optimizer = torch.optim.Adam(model.parameters(), lr=args.train.initial_learning_rate, weight_decay=args.train.weight_decay)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=1, gamma=0.5)  # Add learning rate scheduler
     # ------------------
     #   Start training
     # ------------------
@@ -135,6 +136,7 @@ def main(args: DictConfig):
             optimizer.step()
 
             total_loss += loss.item()
+        scheduler.step()  # Update the learning rate
         print(f'Epoch {epoch+1}, Loss: {total_loss / len(train_data)}')
 
     # Create the directory if it doesn't exist
